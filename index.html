@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real-time Recommendation System</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="text-center mt-4">Real-time Recommendation System</h1>
+      <form id="recommendation-form" class="mt-4">
+        <div class="form-group">
+          <label for="userId">Enter User ID:</label>
+          <input
+            type="text"
+            id="userId"
+            class="form-control"
+            placeholder="User ID"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary">
+          Get Recommendations
+        </button>
+      </form>
+      <div id="recommendations" class="mt-4"></div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+      $("#recommendation-form").on("submit", function (e) {
+        e.preventDefault();
+        let userId = $("#userId").val();
+        $.get("/recommend?userId=" + userId, function (data) {
+          let recommendations =
+            '<h2>Recommendations:</h2><ul class="list-group">';
+          for (let item of data) {
+            recommendations += `<li class="list-group-item">
+                                            <img src="http://via.placeholder.com/50" alt="Product Image" class="product-img">
+                                            <span>${item}</span>
+                                            <button class="btn btn-sm btn-success rate-btn">Rate</button>
+                                        </li>`;
+          }
+          recommendations += "</ul>";
+          $("#recommendations").html(recommendations);
+        });
+      });
+
+      $(document).on("click", ".rate-btn", function () {
+        alert("Thank you for your feedback!");
+      });
+    </script>
+  </body>
+</html>
